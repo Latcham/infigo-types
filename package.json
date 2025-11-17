@@ -9,7 +9,8 @@
 	],
 	"scripts": {
 		"build": "tsc",
-		"publish:github": "npm publish --registry=https://npm.pkg.github.com"
+		"publish:github": "npm publish --registry=https://npm.pkg.github.com",
+		"release": "semantic-release"
 	},
 	"publishConfig": {
 		"registry": "https://npm.pkg.github.com"
@@ -17,5 +18,11 @@
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/latcham/infigo-types.git"
+	},
+	"devDependencies": {
+		"@semantic-release/git": "^10.0.1",
+		"@semantic-release/github": "^12.0.2",
+		"@semantic-release/npm": "^13.1.2",
+		"semantic-release": "^25.0.2"
 	}
 }
