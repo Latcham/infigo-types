@@ -4,7 +4,7 @@ on:
     push:
         branches:
             - main # your release branch
-    workflow_dispatch: # allows manual triggering for dry-run or testing
+    workflow_dispatch: # allows manual triggering for testing
 
 jobs:
     release:
@@ -13,7 +13,7 @@ jobs:
             # 1. Checkout the repository
             - uses: actions/checkout@v3
 
-            # 2. Setup Node.js 24 for semantic-release
+            # 2. Setup Node.js 24
             - uses: actions/setup-node@v3
               with:
                   node-version: 24
@@ -22,16 +22,25 @@ jobs:
             # 3. Install dependencies
             - run: npm ci
 
-            # 4. Optional: Dry-run semantic-release
+            # 4. Optional: Dry-run semantic-release for testing
             - name: Dry-run semantic-release
               if: github.event_name == 'workflow_dispatch' || github.ref != 'refs/heads/main'
               run: npx semantic-release --dry-run
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.WORKFLOWS }}
 
-            # 5. Actual release (build + semantic-release)
-            - name: Run release
+            # 5. Build TypeScript and run semantic-release
+            - name: Build + Release
               if: github.ref == 'refs/heads/main'
               run: npm run release
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.WORKFLOWS }}
+
+            # 6. Optional: Attach dist folder to GitHub release
+            - name: Upload dist folder to release
+              if: github.ref == 'refs/heads/main'
+              uses: softprops/action-gh-release@v1
+              with:
+                  files: dist/** # all files in dist folder
+              env:
+                  GITHUB_TOKEN: ${{ secrets.WORKFLOWS }}
