@@ -1,3 +1,3 @@
 # infigo-types
 
-Infigo TypeScript Types
+Infigo TypeScript types
