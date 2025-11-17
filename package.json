@@ -10,7 +10,7 @@
 	"scripts": {
 		"build": "tsc",
 		"publish:github": "npm publish --registry=https://npm.pkg.github.com",
-		"release": "semantic-release"
+		"release": "npm run build && npx semantic-release"
 	},
 	"publishConfig": {
 		"registry": "https://npm.pkg.github.com"

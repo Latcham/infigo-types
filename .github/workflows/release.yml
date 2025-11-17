@@ -3,30 +3,35 @@ name: Release
 on:
     push:
         branches:
-            - main
+            - main # your release branch
+    workflow_dispatch: # allows manual triggering
 
 jobs:
     release:
         runs-on: ubuntu-latest
-
         steps:
-            - name: Checkout
-              uses: actions/checkout@v3
+            # 1. Checkout the repository
+            - uses: actions/checkout@v3
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v3
+            # 2. Setup Node.js
+            - uses: actions/setup-node@v3
               with:
                   node-version: 20
-                  registry-url: https://npm.pkg.github.com
+                  cache: 'npm'
 
-            - name: Install dependencies
-              run: npm install
+            # 3. Install dependencies
+            - run: npm ci
 
-            - name: Build
-              run: npm run build
-
-            - name: Semantic Release
+            # 4. Optional: Dry-run semantic-release for testing
+            - name: Dry-run semantic-release
+              if: github.event_name == 'workflow_dispatch' || github.ref != 'refs/heads/main'
+              run: npx semantic-release --dry-run
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            # 5. Actual release (build + semantic-release)
+            - name: Run release
+              if: github.ref == 'refs/heads/main'
               run: npm run release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
