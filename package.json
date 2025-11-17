@@ -1,0 +1,21 @@
+{
+	"name": "@latcham/infigo-types",
+	"version": "1.0.0",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"type": "module",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsc",
+		"publish:github": "npm publish --registry=https://npm.pkg.github.com"
+	},
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/latcham/infigo-types.git"
+	}
+}
